@@ -13,7 +13,7 @@ Code to automate granting / revoking access to users in database for multiple ho
 
 
 
-ideas :
+# next ideas :
 
 each user have separate tasks having tags with names in below user list
 
