@@ -1,0 +1,31 @@
+- name: role grant playbook
+  hosts: all
+  become: yes
+  gather_facts: yes
+  
+  vars_files:
+    - vars/rolegrant_vars.yml
+  tasks:
+     - name: check user support
+       community.postgresql.postgresql_query:
+         db: postgres
+         query: SELECT 1 FROM pg_roles WHERE rolname = 'support'
+       register: role_exist
+
+     - name: create user support
+       community.postgresql.postgresql_query:
+         db: postgres
+         query: CREATE USER support;
+       when: role_exist['rowcount']==0
+
+     - name: role grant wizard
+       community.postgresql.postgresql_privs:
+         type: table
+         roles: support
+         database: "{{ item.database }}"
+         state: "{{ item.state }}"
+         privs: "{{ item.privs }}"
+         objs: "{{ item.objs }}"
+         schema: "{{ item.schema }}"
+         grant_option: "{{ item.grant_option }}"
+       loop: "{{ access_var[inventory_hostname] }}"

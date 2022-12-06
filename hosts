@@ -1,0 +1,17 @@
+[aws_group]
+
+
+[aws_group:children]
+group1
+group2
+
+[aws_ec2_groups]
+ec2-18-197-149-156.eu-central-1.compute.amazonaws.com ansible_ssh_private_key_file=/home/chanukyasds/work/aws/keypairs/aws-ec2-pg-1-kp.pem
+ec2-3-124-8-94.eu-central-1.compute.amazonaws.com ansible_ssh_private_key_file=/home/chanukyasds/work/aws/keypairs/aws-ec2-pg-2-kp.pem
+
+
+[group1]
+ec2-18-197-149-156.eu-central-1.compute.amazonaws.com ansible_ssh_private_key_file=/home/chanukyasds/work/aws/keypairs/aws-ec2-pg-1-kp.pem
+
+[group2]
+ec2-3-124-8-94.eu-central-1.compute.amazonaws.com ansible_ssh_private_key_file=/home/chanukyasds/work/aws/keypairs/aws-ec2-pg-2-kp.pem

@@ -1,0 +1,37 @@
+access_var:
+  ec2-18-197-149-156.eu-central-1.compute.amazonaws.com:
+
+    - database: postgres
+      schema: public
+      objs: test1
+      privs: SELECT
+      state: present
+      roles: support
+      grant_option: false
+
+    - database: db1
+      schema: public
+      objs: db1_test1
+      privs: SELECT
+      state: present
+      roles: support
+      grant_option: false
+
+    - database: db1
+      schema: sch1
+      objs: tb1,tb2
+      privs: SELECT
+      state: present
+      roles: support
+      grant_option: false
+
+
+  ec2-3-124-8-94.eu-central-1.compute.amazonaws.com:
+
+    - database: postgres
+      schema: public
+      state: present
+      privs: SELECT
+      objs: test2
+      roles: support
+      grant_option: false
