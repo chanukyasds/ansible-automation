@@ -13,27 +13,8 @@ Code to automate granting / revoking access to users in database for multiple ho
 
 
 
-# next ideas :
+# hba conf deployment :
 
-each user have separate tasks having tags with names in below user list
+Ansible templates used to deploy pg_hba.conf into hosts and reload based on changes in it.
 
-"postgres"
-
-"kpi_service"
-
-"qa_kpi_service" 
-
-"ad_spend_app" 
-
-"cost_aggregator" 
-
-"abuilder" 
-
-"monitoring" 
-
-"segmentation_lookup" 
-
-"segmentation_lookup_ab2"
-
-"support"
-
+group_vars and handlers has been used.
