@@ -1,0 +1,31 @@
+- name: pg_hba.conf playbook
+  hosts: all
+  become: yes
+  gather_facts: no
+  handlers:
+    - name: Reload PostgreSQL
+      ansible.builtin.command: "{{ postgresql_service }}"
+
+  tasks:
+    - name: ec2 postgres ping
+      community.postgresql.postgresql_ping:
+        db: "postgres"
+        become: yes
+      become_user: postgres
+      register: ping_database_result
+      failed_when: ping_database.warnings is defined
+      tags:
+        - ping
+
+    - name: Template task to copy pg_hba.conf to remote host
+      template:
+        src: "{{ template_file_location }}"
+        dest: "{{ destination }}"
+        owner: "{{ database_username }}"
+        group: "{{ database_username }}"
+        mode: 0644
+      when: (destination is defined) and (template_file_location is defined) 
+      notify: Reload PostgreSQL
+
+    
+# ansible-playbook -u "ubuntu" hbaconf-playbook.yml -i hosts

@@ -1,0 +1,2 @@
+
+postgresql_service: sudo service postgresql@14-main reload

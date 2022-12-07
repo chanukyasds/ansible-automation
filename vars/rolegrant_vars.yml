@@ -6,7 +6,7 @@ access_var:
       objs: test1
       privs: SELECT
       state: present
-      roles: support
+      roles: support,usr1
       grant_option: false
 
     - database: db1
@@ -33,5 +33,5 @@ access_var:
       state: present
       privs: SELECT
       objs: test2
-      roles: support
+      roles: support,usr2
       grant_option: false

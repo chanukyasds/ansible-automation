@@ -2,26 +2,33 @@
   hosts: all
   become: yes
   gather_facts: yes
-  
+  vars:
+    user_var: "{{ [] }}"
   vars_files:
     - vars/rolegrant_vars.yml
   tasks:
+     - name: get user list
+       set_fact:
+         user_var: "{{ user_var +  item.roles.split(',')  }}"
+       loop: "{{ access_var[inventory_hostname]  }}"
+
      - name: check user support
        community.postgresql.postgresql_query:
          db: postgres
-         query: SELECT 1 FROM pg_roles WHERE rolname = 'support'
+         query: select array_agg(rolname::text) as exist_user from pg_roles where rolname in (select unnest(ARRAY{{user_var|unique}}));
        register: role_exist
 
      - name: create user support
        community.postgresql.postgresql_query:
          db: postgres
-         query: CREATE USER support;
-       when: role_exist['rowcount']==0
+         query: CREATE USER {{item}};
+       when: ( user_var | difference(role_exist['query_result'][0]['exist_user']) | length ) > 0
+       loop: "{{ user_var | difference(role_exist['query_result'][0]['exist_user']) }}"
 
      - name: role grant wizard
        community.postgresql.postgresql_privs:
          type: table
-         roles: support
+         roles: "{{ item.roles }}"
          database: "{{ item.database }}"
          state: "{{ item.state }}"
          privs: "{{ item.privs }}"
