@@ -7,25 +7,25 @@
   vars_files:
     - vars/rolegrant_vars.yml
   tasks:
-     - name: get user list
+     - name: get users list
        set_fact:
          user_var: "{{ user_var +  item.roles.split(',')  }}"
        loop: "{{ access_var[inventory_hostname]  }}"
 
-     - name: check user support
+     - name: filter existing users
        community.postgresql.postgresql_query:
          db: postgres
          query: select array_agg(rolname::text) as exist_user from pg_roles where rolname in (select unnest(ARRAY{{user_var|unique}}));
        register: role_exist
 
-     - name: create user support
+     - name: create unexist users
        community.postgresql.postgresql_query:
          db: postgres
          query: CREATE USER {{item}};
        when: ( user_var | difference(role_exist['query_result'][0]['exist_user']) | length ) > 0
        loop: "{{ user_var | difference(role_exist['query_result'][0]['exist_user']) }}"
 
-     - name: role grant wizard
+     - name: grant/revoke wizard
        community.postgresql.postgresql_privs:
          type: table
          roles: "{{ item.roles }}"
