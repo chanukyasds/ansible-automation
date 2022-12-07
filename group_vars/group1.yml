@@ -1,4 +1,4 @@
 
-template_file_location:  /home/chanukyasds/work/aws_playbooks/templates/group1_pg_hba.conf
+template_file_location:  ../templates/group1_pg_hba.conf
 destination: /etc/postgresql/14/main/pg_hba.conf
 database_username: postgres
